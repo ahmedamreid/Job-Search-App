@@ -1,14 +1,14 @@
 {
-  "name": "jobsearchapp",
+  "name": "job-search-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "A REST API for a job search platform — users, companies, job postings, and applications.",
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["express", "mongoose", "rest-api", "nodejs"],
+  "author": "Ahmed A. Eid",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

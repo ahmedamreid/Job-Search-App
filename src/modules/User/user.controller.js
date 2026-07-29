@@ -3,8 +3,6 @@ import User from "../../../database/models/User.model.js"
 import bcryptjs from 'bcryptjs'
 import { errorHandling } from "../../middleware/errorHandling.js"
 import { AppError } from "../../utils/AppError.js"
-import { config } from 'dotenv';
-const secretKey = process.env.SECRET_KEY
 
 // - API for signning up and registering new users to the application.
 
@@ -31,10 +29,10 @@ export const signinUser = errorHandling(async (req, res, next) => {
         email: user.email,
         recoveryEmail: user.recoveryEmail,
         role: user.role
-    }, 'JobSearchSecretKey2024', async (err, token) => {
+    }, process.env.SECRET_KEY, async (err, token) => {
         if (err) return res.status(500).json({ message: err.message })
         await User.findOneAndUpdate({ email: req.body.email }, { status: 'online' })
-        res.status(200).json({ message: "User Signed In!...", token: token })
+        res.status(200).json({ message: "User Signed In!", token: token })
     })
 })
 
@@ -69,8 +67,8 @@ export const deleteUser = errorHandling(async (req, res, next) => {
 
 export const getUserData = errorHandling(async (req, res, next) => {
     let userData = await User.findById(req.user.id)
-    userData.password = undefined
     if (!userData) return next(new AppError("User Not Found!", 404))
+    userData.password = undefined
     res.status(200).json({ message: "User Data!", userData })
 })
 
@@ -78,13 +76,12 @@ export const getUserData = errorHandling(async (req, res, next) => {
 
 export const getUserById = errorHandling(async (req, res, next) => {
     let userData = await User.findById(req.params.id)
-    userData.password = undefined
     if (!userData) return next(new AppError("User Not Found!", 404))
+    userData.password = undefined
     res.status(200).json({ message: "User Data!", userData })
 })
 
 // - API for updating old password with new password requires a token into response to be used.
-
 
 export const updateUserPassword = errorHandling(async (req, res, next) => {
     if (!req.body.password || !req.body.newPassword) {
@@ -106,7 +103,6 @@ export const updateUserPassword = errorHandling(async (req, res, next) => {
 })
 
 // - API for getting data from user with recovery email.
-
 
 export const getUserByRecovery = errorHandling(async (req, res, next) => {
     let userData = await User.find({ recoveryEmail: req.body.recoveryEmail })
